@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Mensal CSNN — Oto CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rosa:#FF3162;--rosa-soft:#FFE7EC;
+  --emerald:#46CFB5;--emerald-soft:#E4F8F3;
+  --blue:#6C90F4;--blue-soft:#F0F3FD;
+  --dark:#1a1a1a;
+  --gray-50:#F4F4F4;--gray-100:#EEEEEE;--gray-200:#E5E5E5;
+  --gray-300:#D1D3D4;--gray-500:#888;--gray-600:#666;
+  --gray-700:#555;--gray-800:#333;--white:#fff;
+  --font:'Montserrat',sans-serif;
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-pill:256px;
+}
+body{font-family:var(--font);background:#EDEDED;min-height:100vh;padding:28px 16px;display:flex;flex-direction:column;align-items:center}
+
+/* TOOLBAR */
+.toolbar{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--gray-200);padding:14px 20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;max-width:860px;width:100%;margin-bottom:20px}
+.toolbar-left{display:flex;flex-direction:column;gap:2px}
+.toolbar-title{font-size:13px;font-weight:700;color:var(--gray-800)}
+.toolbar-hint{font-size:11px;color:var(--gray-500)}
+.toolbar-actions{display:flex;gap:8px}
+.btn{height:34px;padding:0 16px;border-radius:var(--r-pill);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:background .15s}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700)}
+.btn-secondary:hover{background:var(--gray-200)}
+.btn-primary{background:var(--rosa);color:var(--white)}
+.btn-primary:hover{background:#E5224F}
+
+/* PAGE */
+.page-wrap{max-width:860px;width:100%}
+.page{background:var(--white);border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--gray-200)}
+
+/* HEADER */
+.page-header{background:var(--rosa);padding:24px 32px;display:flex;justify-content:space-between;align-items:flex-start}
+.header-left{display:flex;flex-direction:column;gap:6px}
+.header-eyebrow{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em}
+.header-title{font-size:26px;font-weight:700;color:#fff;line-height:1.1}
+.header-sub{font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
+.header-logo{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.header-logo img{height:32px;filter:brightness(0) invert(1);opacity:.9}
+.logo-label{font-size:10px;color:rgba(255,255,255,.6);font-weight:600;letter-spacing:.04em}
+
+/* EDITABLE */
+[contenteditable]{outline:none;border-radius:3px;transition:background .12s}
+[contenteditable]:hover{background:rgba(255,193,7,.15)}
+[contenteditable]:focus{background:rgba(255,193,7,.28);box-shadow:0 0 0 2px rgba(255,193,7,.5)}
+.edit-hint{font-size:9px;font-weight:700;color:rgba(255,193,7,.9);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;display:none}
+[contenteditable]:hover ~ .edit-hint,
+[contenteditable]:focus ~ .edit-hint{display:block}
+
+/* BODY */
+.page-body{padding:24px 32px;display:flex;flex-direction:column;gap:20px}
+
+/* KPI TOP ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi-row-2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:480px}
+.kpi-card{background:var(--white);border-radius:var(--r-lg);border:1.5px solid var(--gray-200);padding:14px 16px}
+.kpi-label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--gray-800);line-height:1}
+.kpi-value.rosa{color:var(--rosa)}
+.kpi-value.emerald{color:#1aaa8e}
+.kpi-value.blue{color:var(--blue)}
+.kpi-sub{font-size:10px;color:var(--gray-500);margin-top:4px}
+
+/* ENGAJAMENTO BLOCK */
+.eng-block{background:var(--rosa);border-radius:var(--r-lg);padding:20px 28px}
+.eng-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.1em;text-align:center;margin-bottom:16px}
+.eng-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.eng-side{display:flex;flex-direction:column;align-items:center;gap:4px}
+.eng-side-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.05em;text-align:center}
+.eng-side-val{font-size:24px;font-weight:700;color:#fff;line-height:1}
+.eng-gauge-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+
+/* GAUGE SVG */
+.gauge-svg{width:180px;height:100px}
+
+/* BOTTOM ROW: historico + projetada */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:var(--white);border-radius:var(--r-lg);border:1.5px solid var(--gray-200);padding:16px}
+.panel-title{font-size:11px;font-weight:700;color:var(--gray-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-100)}
+
+/* HISTÓRICO mini chart */
+.hist-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:8px}
+.hist-month{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.hist-bars{display:flex;align-items:flex-end;gap:2px;height:70px}
+.hist-bar-disp{background:var(--gray-200);border-radius:3px 3px 0 0;width:14px}
+.hist-bar-util{background:var(--rosa);border-radius:3px 3px 0 0;width:14px}
+.hist-month-label{font-size:10px;color:var(--gray-500);text-align:center}
+.hist-legend{display:flex;gap:12px;margin-top:6px}
+.hist-leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gray-500)}
+.hist-leg-dot{width:8px;height:8px;border-radius:2px}
+.hist-receita-line{display:flex;gap:6px;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--gray-100)}
+.hist-receita-item{flex:1;text-align:center}
+.hist-receita-lbl{font-size:9px;color:var(--gray-500);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.hist-receita-val{font-size:13px;font-weight:700;color:var(--rosa);margin-top:2px}
+
+/* RECEITA PROJETADA */
+.proj-item{margin-bottom:14px}
+.proj-item:last-child{margin-bottom:0}
+.proj-item-label{font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:4px}
+.proj-item-val{font-size:22px;font-weight:700;color:var(--rosa)}
+.proj-item-val.neutral{color:var(--gray-800)}
+.proj-note{font-size:10px;color:var(--gray-500);margin-top:10px;line-height:1.5;padding-top:8px;border-top:1px solid var(--gray-100)}
+
+/* SEÇÃO ENGAJAMENTO LOJAS */
+.sec-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sec-title{font-size:11px;font-weight:700;color:var(--gray-800);text-transform:uppercase;letter-spacing:.06em}
+.sec-line{flex:1;height:1px;background:var(--gray-200)}
+
+.lojas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lojas-panel{background:var(--white);border-radius:var(--r-lg);border:1.5px solid var(--gray-200);overflow:hidden}
+.lojas-panel-hdr{padding:8px 12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--gray-100)}
+.arrow-badge{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.arrow-up{background:var(--emerald-soft);color:#0e8c76}
+.arrow-down{background:var(--rosa-soft);color:var(--rosa)}
+.lojas-panel-title{font-size:10px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em}
+.lojas-table{width:100%;border-collapse:collapse;font-size:11px}
+.lojas-table th{font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;padding:6px 10px;text-align:left;background:var(--gray-50)}
+.lojas-table th:not(:first-child){text-align:right}
+.lojas-table td{padding:8px 10px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+.lojas-table td:not(:first-child){text-align:right;font-weight:600}
+.lojas-table tr:last-child td{border-bottom:none}
+.loja-nome{font-weight:600;color:var(--gray-800);font-size:11px;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eng-pct-up{color:#1aaa8e;font-weight:700}
+.eng-pct-down{color:var(--rosa);font-weight:700}
+
+/* CAMPANHAS */
+.camp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.camp-table th{font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;padding:7px 8px;text-align:left;border-bottom:1.5px solid var(--gray-200);background:var(--gray-50)}
+.camp-table th:not(:first-child){text-align:right}
+.camp-table td{padding:9px 8px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+.camp-table td:not(:first-child){text-align:right;font-weight:600}
+.camp-table tr:last-child td{border-bottom:none}
+.camp-table tr:hover td{background:var(--gray-50)}
+.camp-nome{font-weight:600;color:var(--gray-800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:200px}
+.val-rosa{color:var(--rosa)!important}
+.val-calc{color:var(--gray-700);background:var(--gray-50);font-style:italic}
+.tag-eng{display:inline-block;padding:2px 7px;border-radius:var(--r-pill);font-size:9px;font-weight:700}
+.tag-bom{background:var(--emerald-soft);color:#0e8c76}
+.tag-medio{background:#FFF8E1;color:#B8860B}
+.tag-ruim{background:var(--rosa-soft);color:var(--rosa)}
+
+/* RECEITA LOJAS TABLE */
+.rec-table{width:100%;border-collapse:collapse;font-size:11px}
+.rec-table th{font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;padding:6px 10px;text-align:left;background:var(--gray-50)}
+.rec-table th:not(:first-child){text-align:right}
+.rec-table td{padding:8px 10px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+.rec-table td:not(:first-child){text-align:right;font-weight:600}
+.rec-table tr:last-child td{border-bottom:none}
+
+/* FOOTER */
+.page-footer{background:var(--gray-50);border-top:1px solid var(--gray-200);padding:14px 32px;display:flex;justify-content:space-between;align-items:center}
+.footer-left{font-size:10px;color:var(--gray-500);line-height:1.6}
+.footer-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.footer-logo{height:22px;opacity:.6}
+.footer-tag{font-size:9px;color:var(--gray-500);font-weight:600;letter-spacing:.04em}
+
+@media print{
+  body{background:white;padding:0}
+  .toolbar{display:none}
+  .page{border-radius:0;border:none}
+  .page-wrap{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="toolbar-title">Relatório Mensal — CS Não Nomeado</div>
+    <div class="toolbar-hint">Clique em qualquer texto amarelo para editar · Ajuste os valores diretamente</div>
+  </div>
+  <div class="toolbar-actions">
+    <button class="btn btn-secondary" onclick="resetAll()">Limpar dados</button>
+    <button class="btn btn-primary" onclick="window.print()">Exportar PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-eyebrow">Relatório de resultados</div>
+      <div class="header-title">
+        <span contenteditable="true" data-default="[Marca]">[Marca]</span>
+      </div>
+      <div class="header-sub">
+        <span contenteditable="true" data-default="[Mês/Ano] · Período: [data início] a [data fim]">[Mês/Ano] · Período: [data início] a [data fim]</span>
+      </div>
+    </div>
+    <div class="header-logo">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" alt="Oto CRM">
+      <span class="logo-label">powered by Oto CRM</span>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- KPIs PRINCIPAIS -->
+    <div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Receita atribuída</div>
+          <div class="kpi-value rosa"><span contenteditable="true" data-default="R$ 82.155,80">R$ 82.155,80</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Vendas atribuídas</div>
+          <div class="kpi-value"><span contenteditable="true" data-default="363">363</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Receita por contato</div>
+          <div class="kpi-value blue"><span contenteditable="true" data-default="R$ 4,23">R$ 4,23</span></div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="kpi-row-2">
+        <div class="kpi-card">
+          <div class="kpi-label">Ticket médio</div>
+          <div class="kpi-value"><span contenteditable="true" data-default="R$ 226,32">R$ 226,32</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Taxa de conversão</div>
+          <div class="kpi-value emerald"><span contenteditable="true" data-default="1,86%">1,86%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGAJAMENTO -->
+    <div class="eng-block">
+      <div class="eng-title">Engajamento</div>
+      <div class="eng-inner">
+        <div class="eng-side">
+          <div class="eng-side-label">Sugestões<br>disponibilizadas</div>
+          <div class="eng-side-val" id="val-disp" contenteditable="true" data-default="74.228" oninput="updateGauge()">74.228</div>
+        </div>
+        <div class="eng-gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 180 100" id="gauge-svg">
+            <defs>
+              <clipPath id="gauge-clip"><rect x="0" y="0" width="180" height="90"/></clipPath>
+            </defs>
+            <!-- track -->
+            <path d="M20,90 A70,70 0 0,1 160,90" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="14" stroke-linecap="round"/>
+            <!-- fill -->
+            <path id="gauge-fill" d="M20,90 A70,70 0 0,1 160,90" fill="none" stroke="#46CFB5" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="161"/>
+            <!-- pct text -->
+            <text id="gauge-pct" x="90" y="82" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="22" font-weight="700" fill="white">26,64%</text>
+            <!-- scale labels -->
+            <text x="16" y="100" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="rgba(255,255,255,0.6)">0</text>
+            <text x="164" y="100" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="rgba(255,255,255,0.6)">100</text>
+          </svg>
+        </div>
+        <div class="eng-side">
+          <div class="eng-side-label">Sugestões<br>utilizadas</div>
+          <div class="eng-side-val" id="val-util" contenteditable="true" data-default="19.775" oninput="updateGauge()">19.775</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVOLUÇÃO HISTÓRICA + RECEITA PROJETADA -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Evolução histórica</div>
+
+        <!-- BARRAS — altura das barras calculada automaticamente via inputs ocultos -->
+        <div class="hist-chart" id="hist-chart-static" style="display:flex;align-items:flex-end;gap:6px;height:72px;margin-bottom:6px">
+          <!-- Mês 1 -->
+          <div class="hist-month" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <div class="hist-bars" style="display:flex;align-items:flex-end;gap:2px;height:64px;position:relative;width:100%">
+              <div id="hb-d-1" style="position:absolute;bottom:0;left:0;right:0;background:var(--gray-200);border-radius:3px 3px 0 0;height:50px"></div>
+              <div id="hb-u-1" style="position:absolute;bottom:0;left:0;right:0;background:var(--rosa);border-radius:3px 3px 0 0;height:12px;opacity:.9"></div>
+            </div>
+            <div class="hist-month-label" id="hm-label-1" contenteditable="true" style="font-size:10px;color:var(--gray-500)">Mar/26</div>
+          </div>
+          <!-- Mês 2 -->
+          <div class="hist-month" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <div class="hist-bars" style="display:flex;align-items:flex-end;gap:2px;height:64px;position:relative;width:100%">
+              <div id="hb-d-2" style="position:absolute;bottom:0;left:0;right:0;background:var(--gray-200);border-radius:3px 3px 0 0;height:57px"></div>
+              <div id="hb-u-2" style="position:absolute;bottom:0;left:0;right:0;background:var(--rosa);border-radius:3px 3px 0 0;height:18px;opacity:.9"></div>
+            </div>
+            <div class="hist-month-label" id="hm-label-2" contenteditable="true" style="font-size:10px;color:var(--gray-500)">Abr/26</div>
+          </div>
+          <!-- Mês 3 -->
+          <div class="hist-month" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <div class="hist-bars" style="display:flex;align-items:flex-end;gap:2px;height:64px;position:relative;width:100%">
+              <div id="hb-d-3" style="position:absolute;bottom:0;left:0;right:0;background:var(--gray-200);border-radius:3px 3px 0 0;height:64px"></div>
+              <div id="hb-u-3" style="position:absolute;bottom:0;left:0;right:0;background:var(--rosa);border-radius:3px 3px 0 0;height:22px;opacity:.9"></div>
+            </div>
+            <div class="hist-month-label" id="hm-label-3" contenteditable="true" style="font-size:10px;color:var(--gray-500)">Mai/26</div>
+          </div>
+        </div>
+
+        <!-- INPUTS de sugestões (usados para calcular as alturas das barras) -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <label style="font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em">Disp.</label>
+            <input type="number" id="hi-d-1" value="60000" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--gray-200);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--gray-800);background:var(--gray-50)">
+            <input type="number" id="hi-u-1" value="15000" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--rosa-soft);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--rosa);background:var(--rosa-soft)">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <label style="font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em">Disp.</label>
+            <input type="number" id="hi-d-2" value="68000" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--gray-200);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--gray-800);background:var(--gray-50)">
+            <input type="number" id="hi-u-2" value="17000" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--rosa-soft);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--rosa);background:var(--rosa-soft)">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <label style="font-size:9px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em">Disp.</label>
+            <input type="number" id="hi-d-3" value="74228" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--gray-200);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--gray-800);background:var(--gray-50)">
+            <input type="number" id="hi-u-3" value="19775" min="0" oninput="updateHistBars()" style="width:100%;height:26px;border:1px solid var(--rosa-soft);border-radius:6px;padding:0 6px;font-size:11px;font-family:var(--font);color:var(--rosa);background:var(--rosa-soft)">
+          </div>
+        </div>
+
+        <div class="hist-legend">
+          <div class="hist-leg"><div class="hist-leg-dot" style="background:var(--rosa)"></div>Sugestões utilizadas</div>
+          <div class="hist-leg"><div class="hist-leg-dot" style="background:var(--gray-200)"></div>Sugestões disp.</div>
+        </div>
+
+        <!-- RECEITA por mês -->
+        <div class="hist-receita-line">
+          <div class="hist-receita-item">
+            <div class="hist-receita-lbl" contenteditable="true">Mar/26</div>
+            <div class="hist-receita-val" contenteditable="true">R$ 48 mil</div>
+          </div>
+          <div class="hist-receita-item">
+            <div class="hist-receita-lbl" contenteditable="true">Abr/26</div>
+            <div class="hist-receita-val" contenteditable="true">R$ 61 mil</div>
+          </div>
+          <div class="hist-receita-item">
+            <div class="hist-receita-lbl" contenteditable="true">Mai/26</div>
+            <div class="hist-receita-val" contenteditable="true">R$ 82 mil</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Receita projetada</div>
+        <div class="proj-item">
+          <div class="proj-item-label">Oportunidades de contato*</div>
+          <div class="proj-item-val neutral"><span contenteditable="true" data-default="10.617">10.617</span></div>
+        </div>
+        <div class="proj-item">
+          <div class="proj-item-label">Projeção de receita adicional**</div>
+          <div class="proj-item-val"><span contenteditable="true" data-default="R$ 44.693">R$ 44.693</span></div>
+        </div>
+        <div class="proj-note">
+          * Diferença entre clientes com sugestões no mês e clientes contatados no mês.<br>
+          ** Oportunidades de contato × Taxa de Conversão × Ticket Médio.
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGAJAMENTO LOJAS -->
+    <div>
+      <div class="sec-header">
+        <div class="sec-dot" style="background:var(--rosa)"></div>
+        <div class="sec-title">Engajamento por loja</div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="lojas-grid">
+        <div class="lojas-panel">
+          <div class="lojas-panel-hdr">
+            <div class="arrow-badge arrow-up">▲</div>
+            <div class="lojas-panel-title">Maiores engajamentos</div>
+          </div>
+          <table class="lojas-table">
+            <thead><tr><th>Loja</th><th>Sug. Disp.</th><th>Sug. Util.</th><th>Eng.</th></tr></thead>
+            <tbody id="eng-top-body">
+              <tr><td class="loja-nome" contenteditable="true">HM</td><td contenteditable="true">3.848</td><td contenteditable="true">1.775</td><td class="eng-pct-up" contenteditable="true">46,13%</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">Filial 13 — LS</td><td contenteditable="true">10.092</td><td contenteditable="true">4.134</td><td class="eng-pct-up" contenteditable="true">40,96%</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">MDL</td><td contenteditable="true">11.228</td><td contenteditable="true">4.589</td><td class="eng-pct-up" contenteditable="true">40,87%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lojas-panel">
+          <div class="lojas-panel-hdr">
+            <div class="arrow-badge arrow-down">▼</div>
+            <div class="lojas-panel-title">Menores engajamentos</div>
+          </div>
+          <table class="lojas-table">
+            <thead><tr><th>Loja</th><th>Sug. Disp.</th><th>Sug. Util.</th><th>Eng.</th></tr></thead>
+            <tbody id="eng-bot-body">
+              <tr><td class="loja-nome" contenteditable="true">Veraz Diniz</td><td contenteditable="true">7.967</td><td contenteditable="true">788</td><td class="eng-pct-down" contenteditable="true">9,89%</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">Filial 12 — Senhorita</td><td contenteditable="true">13.637</td><td contenteditable="true">2.150</td><td class="eng-pct-down" contenteditable="true">15,77%</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">F de S</td><td contenteditable="true">9.831</td><td contenteditable="true">2.092</td><td class="eng-pct-down" contenteditable="true">21,28%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECEITA ATRIBUÍDA LOJAS -->
+    <div>
+      <div class="sec-header">
+        <div class="sec-dot" style="background:var(--blue)"></div>
+        <div class="sec-title">Receita atribuída por loja</div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="lojas-grid">
+        <div class="lojas-panel">
+          <div class="lojas-panel-hdr">
+            <div class="arrow-badge arrow-up">▲</div>
+            <div class="lojas-panel-title">Maiores receitas</div>
+          </div>
+          <table class="rec-table">
+            <thead><tr><th>Loja</th><th>Vendas</th><th>Receita atribuída</th></tr></thead>
+            <tbody>
+              <tr><td class="loja-nome" contenteditable="true">Filial 13 — LS</td><td contenteditable="true">79</td><td class="val-rosa" contenteditable="true">R$ 15.708,61</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">MDL</td><td contenteditable="true">64</td><td class="val-rosa" contenteditable="true">R$ 14.528,30</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">F de S</td><td contenteditable="true">44</td><td class="val-rosa" contenteditable="true">R$ 10.917,98</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lojas-panel">
+          <div class="lojas-panel-hdr">
+            <div class="arrow-badge arrow-down">▼</div>
+            <div class="lojas-panel-title">Menores receitas</div>
+          </div>
+          <table class="rec-table">
+            <thead><tr><th>Loja</th><th>Vendas</th><th>Receita atribuída</th></tr></thead>
+            <tbody>
+              <tr><td class="loja-nome" contenteditable="true">RS</td><td contenteditable="true">23</td><td class="val-rosa" contenteditable="true">R$ 4.368,31</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">Veraz Diniz</td><td contenteditable="true">24</td><td class="val-rosa" contenteditable="true">R$ 5.322,60</td></tr>
+              <tr><td class="loja-nome" contenteditable="true">Agittus</td><td contenteditable="true">26</td><td class="val-rosa" contenteditable="true">R$ 5.903,48</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP CAMPANHAS -->
+    <div>
+      <div class="sec-header">
+        <div class="sec-dot" style="background:var(--emerald)"></div>
+        <div class="sec-title">Top campanhas — maiores receitas atribuídas</div>
+        <div class="sec-line"></div>
+      </div>
+      <div style="font-size:10px;color:var(--gray-500);margin-bottom:6px;padding:0 2px">
+        Preencha <strong>Campanha</strong>, <strong>Sug. Disp.</strong>, <strong>Sug. Util.</strong>, <strong>Receita</strong> e <strong>Vendas</strong> — os demais campos são calculados automaticamente.
+      </div>
+      <div style="border-radius:var(--r-lg);border:1.5px solid var(--gray-200);overflow:hidden">
+        <table class="camp-table">
+          <thead>
+            <tr>
+              <th style="width:28%">Campanha</th>
+              <th style="width:9%">Sug. Disp.</th>
+              <th style="width:9%">Sug. Util.</th>
+              <th style="width:8%">Eng. <span style="font-weight:400;opacity:.6">auto</span></th>
+              <th style="width:13%">Receita</th>
+              <th style="width:7%">Vendas</th>
+              <th style="width:10%">TKM <span style="font-weight:400;opacity:.6">auto</span></th>
+              <th style="width:8%">CR% <span style="font-weight:400;opacity:.6">auto</span></th>
+              <th style="width:8%">RPC <span style="font-weight:400;opacity:.6">auto</span></th>
+            </tr>
+          </thead>
+          <tbody id="camp-body">
+            <tr class="camp-row">
+              <td><span class="camp-nome" contenteditable="true">Cartão Andarez Calçados!</span></td>
+              <td class="camp-disp" contenteditable="true" oninput="calcCampRow(this)">20253</td>
+              <td class="camp-util" contenteditable="true" oninput="calcCampRow(this)">5263</td>
+              <td><span class="camp-eng tag-eng tag-ruim">26,0%</span></td>
+              <td class="camp-receita val-rosa" contenteditable="true" oninput="calcCampRow(this)">19059.98</td>
+              <td class="camp-vendas" contenteditable="true" oninput="calcCampRow(this)">83</td>
+              <td class="camp-tkm val-calc">R$ 229,64</td>
+              <td class="camp-cr val-calc">1,55%</td>
+              <td class="camp-rpc val-calc">R$ 3,57</td>
+            </tr>
+            <tr class="camp-row">
+              <td><span class="camp-nome" contenteditable="true">Promoção dia das mães</span></td>
+              <td class="camp-disp" contenteditable="true" oninput="calcCampRow(this)">18368</td>
+              <td class="camp-util" contenteditable="true" oninput="calcCampRow(this)">4959</td>
+              <td><span class="camp-eng tag-eng tag-ruim">27,0%</span></td>
+              <td class="camp-receita val-rosa" contenteditable="true" oninput="calcCampRow(this)">19038.21</td>
+              <td class="camp-vendas" contenteditable="true" oninput="calcCampRow(this)">91</td>
+              <td class="camp-tkm val-calc">R$ 209,21</td>
+              <td class="camp-cr val-calc">1,82%</td>
+              <td class="camp-rpc val-calc">R$ 3,80</td>
+            </tr>
+            <tr class="camp-row">
+              <td><span class="camp-nome" contenteditable="true">Boas-vindas Andarez</span></td>
+              <td class="camp-disp" contenteditable="true" oninput="calcCampRow(this)">5194</td>
+              <td class="camp-util" contenteditable="true" oninput="calcCampRow(this)">1246</td>
+              <td><span class="camp-eng tag-eng tag-ruim">24,0%</span></td>
+              <td class="camp-receita val-rosa" contenteditable="true" oninput="calcCampRow(this)">11254.00</td>
+              <td class="camp-vendas" contenteditable="true" oninput="calcCampRow(this)">67</td>
+              <td class="camp-tkm val-calc">R$ 167,97</td>
+              <td class="camp-cr val-calc">5,30%</td>
+              <td class="camp-rpc val-calc">R$ 8,90</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="addCampRow()" style="font-size:11px;height:28px;padding:0 12px">+ Adicionar campanha</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="footer-left">
+      <span contenteditable="true" data-default="Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]">Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]</span>
+    </div>
+    <div class="footer-right">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" class="footer-logo" alt="Oto CRM">
+      <span class="footer-tag">powered by Oto CRM</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── HISTÓRICO — barras calculadas a partir dos inputs ──
+var histDefaults = {
+  'd1':60000,'u1':15000,
+  'd2':68000,'u2':17000,
+  'd3':74228,'u3':19775
+};
+
+function updateHistBars(){
+  var vals = [1,2,3].map(function(i){
+    return {
+      d: parseInt(document.getElementById('hi-d-'+i).value)||0,
+      u: parseInt(document.getElementById('hi-u-'+i).value)||0
+    };
+  });
+  var maxH = 64;
+  var maxD = Math.max.apply(null, vals.map(function(v){return v.d;})) || 1;
+  [1,2,3].forEach(function(i){
+    var v = vals[i-1];
+    var hd = Math.round(v.d/maxD*maxH);
+    var hu = Math.round(v.u/maxD*maxH);
+    document.getElementById('hb-d-'+i).style.height = hd+'px';
+    document.getElementById('hb-u-'+i).style.height = hu+'px';
+  });
+}
+
+// ── GAUGE ──
+function parseNum(str){
+  return parseInt((str||'0').replace(/\D/g,''))||0;
+}
+
+function updateGauge(){
+  var dispEl = document.getElementById('val-disp');
+  var utilEl = document.getElementById('val-util');
+  var disp = parseNum(dispEl ? dispEl.textContent : '0');
+  var util = parseNum(utilEl ? utilEl.textContent : '0');
+  var pct = disp > 0 ? Math.min(100, Math.round(util/disp*1000)/10) : 0;
+
+  // arc: total arc length ~220 for semicircle at r=70
+  var arcLen = 220;
+  var offset = arcLen - (pct/100)*arcLen;
+  var fillEl = document.getElementById('gauge-fill');
+  var pctEl  = document.getElementById('gauge-pct');
+  if(fillEl) fillEl.setAttribute('stroke-dashoffset', offset.toFixed(1));
+  if(pctEl)  pctEl.textContent = pct.toFixed(2)+'%';
+
+  // color by range
+  var color = pct >= 80 ? '#46CFB5' : pct >= 60 ? '#F4C430' : '#FF8FAB';
+  if(fillEl) fillEl.setAttribute('stroke', color);
+}
+
+// ── CAMPANHAS — cálculo automático ──
+function parseCampNum(str) {
+  if (!str) return 0;
+  // aceita tanto "19059.98" quanto "R$ 19.059,98" quanto "19.059,98"
+  var s = str.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
+  return parseFloat(s) || 0;
+}
+
+function fmtBRL(val) {
+  return 'R$ ' + val.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function fmtPct(val) {
+  return val.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
+}
+
+function engTag(pct) {
+  if (pct >= 35) return 'tag-bom';
+  if (pct >= 20) return 'tag-medio';
+  return 'tag-ruim';
+}
+
+function calcCampRow(el) {
+  var row = el.closest('tr.camp-row');
+  if (!row) return;
+
+  var disp    = parseCampNum(row.querySelector('.camp-disp').textContent);
+  var util    = parseCampNum(row.querySelector('.camp-util').textContent);
+  var receita = parseCampNum(row.querySelector('.camp-receita').textContent);
+  var vendas  = parseCampNum(row.querySelector('.camp-vendas').textContent);
+
+  // Engajamento
+  var engEl = row.querySelector('.camp-eng');
+  if (disp > 0) {
+    var eng = util / disp * 100;
+    engEl.textContent = fmtPct(eng);
+    engEl.className = 'camp-eng tag-eng ' + engTag(eng);
+  } else {
+    engEl.textContent = '—';
+  }
+
+  // TKM — Ticket Médio = Receita / Vendas
+  var tkmEl = row.querySelector('.camp-tkm');
+  tkmEl.textContent = vendas > 0 ? fmtBRL(receita / vendas) : '—';
+
+  // CR% — Conversion Rate = Vendas / Disp * 100
+  var crEl = row.querySelector('.camp-cr');
+  crEl.textContent = disp > 0 ? fmtPct(vendas / disp * 100) : '—';
+
+  // RPC — Receita por Contato = Receita / Disp
+  var rpcEl = row.querySelector('.camp-rpc');
+  rpcEl.textContent = disp > 0 ? fmtBRL(receita / disp) : '—';
+}
+
+function calcAllCampRows() {
+  document.querySelectorAll('tr.camp-row').forEach(function(row) {
+    var dispEl = row.querySelector('.camp-disp');
+    if (dispEl) calcCampRow(dispEl);
+  });
+}
+
+function addCampRow() {
+  var tbody = document.getElementById('camp-body');
+  var tr = document.createElement('tr');
+  tr.className = 'camp-row';
+  tr.innerHTML = '<td><span class="camp-nome" contenteditable="true">Nova campanha</span></td>' +
+    '<td class="camp-disp" contenteditable="true" oninput="calcCampRow(this)">0</td>' +
+    '<td class="camp-util" contenteditable="true" oninput="calcCampRow(this)">0</td>' +
+    '<td><span class="camp-eng tag-eng tag-ruim">—</span></td>' +
+    '<td class="camp-receita val-rosa" contenteditable="true" oninput="calcCampRow(this)">0</td>' +
+    '<td class="camp-vendas" contenteditable="true" oninput="calcCampRow(this)">0</td>' +
+    '<td class="camp-tkm val-calc">—</td>' +
+    '<td class="camp-cr val-calc">—</td>' +
+    '<td class="camp-rpc val-calc">—</td>';
+  tbody.appendChild(tr);
+}
+
+// ── RESET ──
+function resetAll(){
+  if(!confirm('Limpar todos os dados?')) return;
+  // restaura todos os contenteditable via snapshot do init
+  document.querySelectorAll('[contenteditable]').forEach(function(el){
+    var original = el.dataset.original !== undefined ? el.dataset.original : el.dataset.default;
+    if(original !== undefined) el.innerHTML = original;
+  });
+  // restaura inputs do histórico
+  document.getElementById('hi-d-1').value = histDefaults.d1;
+  document.getElementById('hi-u-1').value = histDefaults.u1;
+  document.getElementById('hi-d-2').value = histDefaults.d2;
+  document.getElementById('hi-u-2').value = histDefaults.u2;
+  document.getElementById('hi-d-3').value = histDefaults.d3;
+  document.getElementById('hi-u-3').value = histDefaults.u3;
+  updateHistBars();
+  updateGauge();
+}
+
+// init — snapshot de todos os contenteditable antes de qualquer edição
+document.querySelectorAll('[contenteditable]').forEach(function(el){
+  el.dataset.original = el.innerHTML;
+});
+
+updateHistBars();
+updateGauge();
+calcAllCampRows();
+
+// live gauge update
+['val-disp','val-util'].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateGauge);
+});
+</script>
+</body>
+</html>
