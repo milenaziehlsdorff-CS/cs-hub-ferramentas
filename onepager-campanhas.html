@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Pager Campanhas — Oto CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rosa:#FF3162;--rosa-soft:#FFE7EC;
+  --emerald:#46CFB5;--emerald-soft:#E4F8F3;
+  --blue:#6C90F4;--blue-soft:#F0F3FD;
+  --amber:#F59E0B;--amber-soft:#FEF3C7;
+  --gray-50:#F4F4F4;--gray-100:#EEEEEE;--gray-200:#E5E5E5;
+  --gray-500:#888;--gray-600:#666;--gray-700:#555;--gray-800:#333;--white:#fff;
+  --font:'Montserrat',sans-serif;
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-pill:256px;
+}
+body{font-family:var(--font);background:#EDEDED;min-height:100vh;padding:28px 16px;display:flex;flex-direction:column;align-items:center}
+
+/* TOOLBAR */
+.toolbar{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--gray-200);padding:14px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;max-width:800px;width:100%;margin-bottom:16px}
+.toolbar-left{display:flex;flex-direction:column;gap:2px}
+.toolbar-title{font-size:13px;font-weight:700;color:var(--gray-800)}
+.toolbar-hint{font-size:11px;color:var(--gray-500)}
+.toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{height:34px;padding:0 16px;border-radius:var(--r-pill);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:background .15s}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700)}
+.btn-secondary:hover{background:var(--gray-200)}
+.btn-primary{background:var(--rosa);color:var(--white)}
+.btn-primary:hover{background:#E5224F}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;background:var(--gray-100);border-radius:var(--r-pill);padding:3px;gap:3px}
+.toggle-btn{height:28px;padding:0 14px;border-radius:var(--r-pill);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--gray-600);transition:all .15s}
+.toggle-btn.active{background:var(--white);color:var(--gray-800);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+/* PAGE */
+.page-wrap{max-width:800px;width:100%}
+.page{background:var(--white);border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--gray-200)}
+.variant{display:none}
+.variant.show{display:block}
+
+/* EDITABLE */
+[contenteditable]{outline:none;border-radius:3px;transition:background .12s}
+[contenteditable]:hover{background:rgba(255,193,7,.18)}
+[contenteditable]:focus{background:rgba(255,193,7,.3);box-shadow:0 0 0 2px rgba(255,193,7,.5)}
+
+/* HEADER */
+.page-header{padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-start}
+.page-header.sms-hdr{background:var(--rosa)}
+.page-header.email-hdr{background:#1a1a2e}
+.hdr-left{display:flex;flex-direction:column;gap:5px}
+.hdr-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.hdr-eyebrow.sms{color:rgba(255,255,255,.7)}
+.hdr-eyebrow.email{color:rgba(255,255,255,.5)}
+.hdr-title{font-size:24px;font-weight:700;color:#fff;line-height:1.1}
+.hdr-period{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px}
+.hdr-msg-bubble{background:rgba(255,255,255,.15);border-radius:10px 10px 10px 2px;padding:10px 14px;max-width:280px;margin-top:8px}
+.hdr-msg-text{font-size:11px;color:#fff;line-height:1.5}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.hdr-logo{height:28px;filter:brightness(0) invert(1);opacity:.85}
+.hdr-logo-label{font-size:9px;color:rgba(255,255,255,.55);font-weight:600;letter-spacing:.04em}
+.channel-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--r-pill);font-size:11px;font-weight:700}
+.channel-badge.sms{background:rgba(255,255,255,.2);color:#fff}
+.channel-badge.email{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
+
+/* RECEITA HERO */
+.receita-hero{padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.receita-label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.receita-val{font-size:36px;font-weight:700;color:var(--rosa);line-height:1}
+.roi-card{background:var(--emerald-soft);border-radius:var(--r-lg);padding:12px 16px;text-align:right;border:1px solid #a7f3e0}
+.roi-label{font-size:10px;font-weight:700;color:#0e8c76;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.roi-val{font-size:22px;font-weight:700;color:#0e8c76}
+
+/* KPI GRID */
+.kpi-grid{padding:16px 28px;display:grid;gap:8px}
+.kpi-grid.cols4{grid-template-columns:repeat(4,1fr)}
+.kpi-grid.cols2{grid-template-columns:repeat(2,1fr)}
+.kpi-card{background:var(--white);border-radius:var(--r-lg);border:1.5px solid var(--gray-200);padding:13px 14px}
+.kpi-label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.kpi-val{font-size:20px;font-weight:700;color:var(--gray-800);line-height:1}
+.kpi-val.rosa{color:var(--rosa)}
+.kpi-val.blue{color:var(--blue)}
+.kpi-val.emerald{color:#1aaa8e}
+.kpi-val.amber{color:var(--amber)}
+.kpi-sub{font-size:10px;color:var(--gray-500);margin-top:3px}
+
+/* DIVIDER */
+.sec-divider{margin:0 28px;height:1px;background:var(--gray-100)}
+
+/* FUNIL */
+.funil-wrap{padding:16px 28px}
+.funil-title{font-size:11px;font-weight:700;color:var(--gray-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.funil-steps{display:flex;flex-direction:column;gap:6px}
+.funil-step{display:flex;align-items:center;gap:10px}
+.funil-step-label{font-size:11px;color:var(--gray-700);width:100px;flex-shrink:0}
+.funil-bar-bg{flex:1;height:10px;background:var(--gray-100);border-radius:var(--r-pill);overflow:hidden}
+.funil-bar-fill{height:100%;border-radius:var(--r-pill);transition:width .4s}
+.funil-step-val{font-size:11px;font-weight:700;color:var(--gray-800);width:60px;text-align:right}
+.funil-step-pct{font-size:10px;color:var(--gray-500);width:44px;text-align:right}
+.funil-conv{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:10px 12px;background:var(--gray-50);border-radius:var(--r-md);border:1px solid var(--gray-200)}
+.funil-conv-label{font-size:11px;color:var(--gray-600)}
+.funil-conv-val{font-size:16px;font-weight:700;color:var(--rosa)}
+
+/* SEGMENTAÇÃO */
+.seg-wrap{padding:0 28px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg-panel{background:var(--gray-50);border-radius:var(--r-lg);border:1px solid var(--gray-200);padding:12px 14px}
+.seg-title{font-size:10px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.seg-list{display:flex;flex-direction:column;gap:5px}
+.seg-item{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--gray-700)}
+.seg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+
+/* TIMING */
+.timing-wrap{padding:0 28px 16px}
+.timing-title{font-size:11px;font-weight:700;color:var(--gray-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.timing-rows{display:flex;flex-direction:column;gap:8px}
+.timing-row{display:flex;align-items:center;gap:10px}
+.timing-range{font-size:10px;font-weight:700;color:var(--gray-600);width:60px;flex-shrink:0}
+.timing-bars{flex:1;display:flex;flex-direction:column;gap:3px}
+.timing-bar-row{display:flex;align-items:center;gap:6px}
+.timing-bar-bg{flex:1;height:8px;background:var(--gray-100);border-radius:var(--r-pill);overflow:hidden}
+.timing-bar-fill{height:100%;border-radius:var(--r-pill)}
+.timing-val{font-size:10px;font-weight:700;width:28px;text-align:right}
+.timing-legend{display:flex;gap:14px;margin-top:8px}
+.timing-leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gray-500)}
+.timing-leg-dot{width:8px;height:8px;border-radius:2px}
+.timing-insight{margin-top:10px;padding:10px 12px;background:var(--blue-soft);border-radius:var(--r-md);font-size:11px;color:var(--gray-700);line-height:1.5;border:1px solid #c7d6fc}
+
+/* SLIDER CONTROLS */
+.controls-panel{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--r-md);padding:12px;margin:0 28px 16px}
+.controls-title{font-size:10px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ctrl-item{display:flex;flex-direction:column;gap:3px}
+.ctrl-label{font-size:10px;font-weight:700;color:var(--gray-600)}
+.ctrl-row{display:flex;align-items:center;gap:6px}
+.ctrl-row input[type=range]{flex:1}
+.ctrl-val{font-size:10px;font-weight:700;color:var(--blue);width:28px;text-align:right}
+
+/* FOOTER */
+.page-footer{background:var(--gray-50);border-top:1px solid var(--gray-200);padding:12px 28px;display:flex;justify-content:space-between;align-items:center}
+.footer-left{font-size:10px;color:var(--gray-500);line-height:1.6}
+.footer-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.footer-logo{height:20px;opacity:.55}
+.footer-tag{font-size:9px;color:var(--gray-500);font-weight:600;letter-spacing:.04em}
+
+@media print{
+  body{background:white;padding:0}
+  .toolbar,.controls-panel{display:none}
+  .page{border-radius:0;border:none}
+  .page-wrap{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="toolbar-title">One Pager — Campanhas Oto CRM</div>
+    <div class="toolbar-hint">Clique em qualquer texto para editar · Use os sliders para atualizar funil e timing</div>
+  </div>
+  <div class="toolbar-right">
+    <div class="toggle-wrap">
+      <button class="toggle-btn active" onclick="switchTab('sms',this)">SMS</button>
+      <button class="toggle-btn" onclick="switchTab('email',this)">E-mail</button>
+    </div>
+    <button class="btn btn-secondary" onclick="resetAll()">Limpar</button>
+    <button class="btn btn-primary" onclick="window.print()">Exportar PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+<div class="page">
+
+<!-- ══════════════ SMS ══════════════ -->
+<div class="variant show" id="tab-sms">
+
+  <div class="page-header sms-hdr">
+    <div class="hdr-left">
+      <div class="hdr-eyebrow sms">Relatório de campanha · SMS</div>
+      <div class="hdr-title"><span contenteditable="true" data-default="[Nome da Campanha]">[Nome da Campanha]</span></div>
+      <div class="hdr-period"><span contenteditable="true" data-default="Análise referente ao período de [data início] a [data fim]">Análise referente ao período de [data início] a [data fim]</span></div>
+      <div class="hdr-msg-bubble">
+        <div class="hdr-msg-text"><span contenteditable="true" data-default="[Texto da mensagem SMS enviada para os clientes]">[Texto da mensagem SMS enviada para os clientes]</span></div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" class="hdr-logo" alt="Oto CRM">
+      <span class="hdr-logo-label">powered by Oto CRM</span>
+      <div class="channel-badge sms">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        SMS
+      </div>
+    </div>
+  </div>
+
+  <div class="receita-hero">
+    <div>
+      <div class="receita-label">Receita atribuída</div>
+      <div class="receita-val" id="sms-receita" contenteditable="true" data-default="24943.61" oninput="updateSMSCalcs()">R$ 24.943,61</div>
+    </div>
+    <div class="roi-card">
+      <div class="roi-label">ROI <span style="font-size:9px;font-weight:400;opacity:.7">auto</span></div>
+      <div class="roi-val" id="sms-roi-val">—</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid cols4" style="padding-top:14px">
+    <div class="kpi-card">
+      <div class="kpi-label">Investimento</div>
+      <div class="kpi-val" id="sms-investimento" contenteditable="true" data-default="1703" oninput="updateSMSCalcs()">R$ 1.703</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">SMS enviados</div>
+      <div class="kpi-val blue" id="sms-enviados" contenteditable="true" data-default="11.355" oninput="updateSMSFunil()">11.355</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Envios confirmados</div>
+      <div class="kpi-val" id="sms-confirmados" contenteditable="true" data-default="11.350" oninput="updateSMSFunil()">11.350</div>
+      <div class="kpi-sub" id="sms-tx-entrega">Taxa de entrega: —</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">SMS recebidos</div>
+      <div class="kpi-val" id="sms-recebidos" contenteditable="true" data-default="10.445" oninput="updateSMSFunil()">10.445</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid cols4">
+    <div class="kpi-card">
+      <div class="kpi-label">Vendas convertidas</div>
+      <div class="kpi-val rosa" id="sms-vendas" contenteditable="true" data-default="57" oninput="updateSMSCalcs()">57</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Clientes convertidos</div>
+      <div class="kpi-val" id="sms-clientes" contenteditable="true" data-default="55" oninput="updateSMSFunil()">55</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Taxa de conversão</div>
+      <div class="kpi-val emerald" id="sms-tx-conv">—</div>
+      <div class="kpi-sub">calculada automaticamente</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Ticket médio <span style="font-size:9px;font-weight:400;color:var(--gray-500)">auto</span></div>
+      <div class="kpi-val" id="sms-tkm-val">—</div>
+      <div class="kpi-sub">Receita ÷ Vendas</div>
+    </div>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <div class="funil-wrap">
+    <div class="funil-title">Funil de conversão</div>
+    <div class="funil-steps">
+      <div class="funil-step">
+        <span class="funil-step-label">Enviados</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="sf-enviados" style="width:100%;background:var(--blue)"></div></div>
+        <span class="funil-step-val" id="sfv-enviados">—</span>
+        <span class="funil-step-pct">100%</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Confirmados</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="sf-confirmados" style="width:0%;background:var(--blue)"></div></div>
+        <span class="funil-step-val" id="sfv-confirmados">—</span>
+        <span class="funil-step-pct" id="sfp-confirmados">—</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Recebidos</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="sf-recebidos" style="width:0%;background:var(--emerald)"></div></div>
+        <span class="funil-step-val" id="sfv-recebidos">—</span>
+        <span class="funil-step-pct" id="sfp-recebidos">—</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Convertidos</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="sf-convertidos" style="width:0%;background:var(--rosa)"></div></div>
+        <span class="funil-step-val" id="sfv-convertidos">—</span>
+        <span class="funil-step-pct" id="sfp-convertidos">—</span>
+      </div>
+    </div>
+    <div class="funil-conv">
+      <span class="funil-conv-label">Taxa de conversão (convertidos / enviados)</span>
+      <span class="funil-conv-val" id="sms-funil-conv">—</span>
+    </div>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <div class="timing-wrap">
+    <div class="timing-title">Timing da conversão — dias entre disparo e pedido</div>
+    <div class="timing-rows">
+      <div class="timing-row">
+        <span class="timing-range">0–3 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="stb-03" style="background:var(--rosa)"></div></div>
+            <span class="timing-val" id="stv-03" style="color:var(--rosa)">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="timing-row">
+        <span class="timing-range">4–7 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="stb-47" style="background:var(--blue)"></div></div>
+            <span class="timing-val" id="stv-47" style="color:var(--blue)">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="timing-row">
+        <span class="timing-range">8–15 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="stb-815" style="background:var(--emerald)"></div></div>
+            <span class="timing-val" id="stv-815" style="color:#1aaa8e">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="timing-insight" contenteditable="true" data-default="[Insight sobre o timing de conversão da campanha]">[Insight sobre o timing de conversão da campanha]</div>
+  </div>
+
+  <div class="controls-panel">
+    <div class="controls-title">Sliders de timing (ocultos no PDF)</div>
+    <div class="controls-grid">
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:var(--rosa)">0–3 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateSMSTiming('03',this.value)">
+          <span class="ctrl-val" id="sctl-03">0</span>
+        </div>
+      </div>
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:var(--blue)">4–7 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateSMSTiming('47',this.value)">
+          <span class="ctrl-val" id="sctl-47">0</span>
+        </div>
+      </div>
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:#1aaa8e">8–15 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateSMSTiming('815',this.value)">
+          <span class="ctrl-val" id="sctl-815">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left">
+      <span contenteditable="true" data-default="Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]">Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]</span>
+    </div>
+    <div class="footer-right">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" class="footer-logo" alt="Oto CRM">
+      <span class="footer-tag">powered by Oto CRM</span>
+    </div>
+  </div>
+
+</div>
+<!-- ══ fim SMS ══ -->
+
+
+<!-- ══════════════ E-MAIL ══════════════ -->
+<div class="variant" id="tab-email">
+
+  <div class="page-header email-hdr">
+    <div class="hdr-left">
+      <div class="hdr-eyebrow email">Relatório de campanha · E-mail</div>
+      <div class="hdr-title"><span contenteditable="true" data-default="[Nome da Campanha]">[Nome da Campanha]</span></div>
+      <div class="hdr-period"><span contenteditable="true" data-default="Análise referente ao período de [data início] a [data fim]">Análise referente ao período de [data início] a [data fim]</span></div>
+      <div class="hdr-msg-bubble" style="background:rgba(255,255,255,.1)">
+        <div class="hdr-msg-text">
+          <span style="opacity:.6;font-size:10px">Assunto: </span>
+          <span contenteditable="true" data-default="[Linha de assunto do e-mail]">[Linha de assunto do e-mail]</span>
+        </div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" class="hdr-logo" alt="Oto CRM">
+      <span class="hdr-logo-label">powered by Oto CRM</span>
+      <div class="channel-badge email">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        E-mail
+      </div>
+    </div>
+  </div>
+
+  <div class="receita-hero">
+    <div>
+      <div class="receita-label">Receita atribuída</div>
+      <div class="receita-val" id="em-receita" contenteditable="true" data-default="0" oninput="updateEmailCalcs()">R$ [valor]</div>
+    </div>
+    <div class="roi-card">
+      <div class="roi-label">ROI <span style="font-size:9px;font-weight:400;opacity:.7">auto</span></div>
+      <div class="roi-val" id="em-roi-val">—</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid cols4" style="padding-top:14px">
+    <div class="kpi-card">
+      <div class="kpi-label">Investimento</div>
+      <div class="kpi-val" id="em-investimento" contenteditable="true" data-default="0" oninput="updateEmailCalcs()">R$ [valor]</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">E-mails enviados</div>
+      <div class="kpi-val blue" id="em-enviados" contenteditable="true" data-default="[X]" oninput="updateEmailFunil()">[X]</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">E-mails entregues</div>
+      <div class="kpi-val" id="em-entregues" contenteditable="true" data-default="[X]" oninput="updateEmailFunil()">[X]</div>
+      <div class="kpi-sub" id="em-tx-entrega">Taxa de entrega: —</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Aberturas únicas</div>
+      <div class="kpi-val amber" id="em-aberturas" contenteditable="true" data-default="[X]" oninput="updateEmailFunil()">[X]</div>
+      <div class="kpi-sub" id="em-tx-abertura">Taxa de abertura: —</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid cols4">
+    <div class="kpi-card">
+      <div class="kpi-label">Cliques únicos</div>
+      <div class="kpi-val" id="em-cliques" contenteditable="true" data-default="[X]" oninput="updateEmailFunil()">[X]</div>
+      <div class="kpi-sub" id="em-tx-clique">Taxa de clique: —</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Vendas convertidas</div>
+      <div class="kpi-val rosa" id="em-vendas" contenteditable="true" data-default="[X]" oninput="updateEmailCalcs()">[X]</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Taxa de conversão</div>
+      <div class="kpi-val emerald" id="em-tx-conv">—</div>
+      <div class="kpi-sub">calculada automaticamente</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Ticket médio <span style="font-size:9px;font-weight:400;color:var(--gray-500)">auto</span></div>
+      <div class="kpi-val" id="em-tkm-val">—</div>
+      <div class="kpi-sub">Receita ÷ Vendas</div>
+    </div>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <div class="funil-wrap">
+    <div class="funil-title">Funil de conversão</div>
+    <div class="funil-steps">
+      <div class="funil-step">
+        <span class="funil-step-label">Enviados</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="ef-enviados" style="width:100%;background:var(--blue)"></div></div>
+        <span class="funil-step-val" id="efv-enviados">—</span>
+        <span class="funil-step-pct">100%</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Entregues</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="ef-entregues" style="width:0%;background:var(--blue)"></div></div>
+        <span class="funil-step-val" id="efv-entregues">—</span>
+        <span class="funil-step-pct" id="efp-entregues">—</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Aberturas</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="ef-aberturas" style="width:0%;background:var(--amber)"></div></div>
+        <span class="funil-step-val" id="efv-aberturas">—</span>
+        <span class="funil-step-pct" id="efp-aberturas">—</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Cliques</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="ef-cliques" style="width:0%;background:var(--emerald)"></div></div>
+        <span class="funil-step-val" id="efv-cliques">—</span>
+        <span class="funil-step-pct" id="efp-cliques">—</span>
+      </div>
+      <div class="funil-step">
+        <span class="funil-step-label">Convertidos</span>
+        <div class="funil-bar-bg"><div class="funil-bar-fill" id="ef-convertidos" style="width:0%;background:var(--rosa)"></div></div>
+        <span class="funil-step-val" id="efv-convertidos">—</span>
+        <span class="funil-step-pct" id="efp-convertidos">—</span>
+      </div>
+    </div>
+    <div class="funil-conv">
+      <span class="funil-conv-label">Taxa de conversão (convertidos / enviados)</span>
+      <span class="funil-conv-val" id="em-funil-conv">—</span>
+    </div>
+  </div>
+
+  <div class="sec-divider"></div>
+
+  <div class="timing-wrap">
+    <div class="timing-title">Timing da conversão — dias entre envio e pedido</div>
+    <div class="timing-rows">
+      <div class="timing-row">
+        <span class="timing-range">0–3 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="etb-03" style="background:var(--rosa)"></div></div>
+            <span class="timing-val" id="etv-03" style="color:var(--rosa)">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="timing-row">
+        <span class="timing-range">4–7 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="etb-47" style="background:var(--blue)"></div></div>
+            <span class="timing-val" id="etv-47" style="color:var(--blue)">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="timing-row">
+        <span class="timing-range">8–15 dias</span>
+        <div class="timing-bars">
+          <div class="timing-bar-row">
+            <div class="timing-bar-bg"><div class="timing-bar-fill" id="etb-815" style="background:var(--emerald)"></div></div>
+            <span class="timing-val" id="etv-815" style="color:#1aaa8e">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="timing-insight" contenteditable="true" data-default="[Insight sobre o timing de conversão da campanha]">[Insight sobre o timing de conversão da campanha]</div>
+  </div>
+
+  <div class="controls-panel">
+    <div class="controls-title">Sliders de timing (ocultos no PDF)</div>
+    <div class="controls-grid">
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:var(--rosa)">0–3 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateEmailTiming('03',this.value)">
+          <span class="ctrl-val" id="ectl-03">0</span>
+        </div>
+      </div>
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:var(--blue)">4–7 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateEmailTiming('47',this.value)">
+          <span class="ctrl-val" id="ectl-47">0</span>
+        </div>
+      </div>
+      <div class="ctrl-item">
+        <div class="ctrl-label" style="color:#1aaa8e">8–15 dias</div>
+        <div class="ctrl-row">
+          <input type="range" min="0" max="300" value="0" step="1" oninput="updateEmailTiming('815',this.value)">
+          <span class="ctrl-val" id="ectl-815">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left">
+      <span contenteditable="true" data-default="Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]">Análise gerada com base nos dados exportados do Oto CRM · [Mês/Ano]</span>
+    </div>
+    <div class="footer-right">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI2IiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIyNiAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF80NTlfNjApIj4KPHBhdGggZD0iTTIyMi40MjkgNDUuODQxMUMyMTguNTc0IDM2LjY0MjIgMjExLjI3NiAyOS4zMTAyIDIwMi4wOTEgMjUuNDA2NEMxOTcuNDMyIDIzLjM5NDMgMTkyLjQzMSAyMi4zODgyIDE4Ny4wODkgMjIuMzg4MkMxODEuOTczIDIyLjM1MyAxNzYuOTA2IDIzLjM4MTYgMTcyLjIwOSAyNS40MDg0QzE2My4wMjIgMjkuMzM4NiAxNTUuNzA2IDM2LjY1ODQgMTUxLjc4NiA0NS44NDNDMTQ5Ljc5MSA1MC41NTk2IDE0OC43NjMgNTUuNjI4IDE0OC43NjMgNjAuNzQ4NEMxNDguNzYzIDY1Ljg2ODkgMTQ5Ljc5MSA3MC45MzczIDE1MS43ODYgNzUuNjUzOEMxNTMuNzI2IDgwLjE5ODkgMTU2LjUyNSA4NC4zMjc2IDE2MC4wMyA4Ny44MTM0QzE2My41MzggOTEuMjgzNSAxNjcuNjY2IDk0LjA2NDQgMTcyLjIwMSA5Ni4wMTE1QzE3Ni45MDEgOTguMDM4NyAxODEuOTcxIDk5LjA2NjYgMTg3LjA4OSA5OS4wMjk3QzE5Mi40MjkgOTkuMDI5NyAxOTcuNDI4IDk4LjAyMyAyMDIuMDg3IDk2LjAwOTZDMjA2LjYyOCA5NC4wNzQgMjEwLjc1OCA5MS4yOTE3IDIxNC4yNTYgODcuODExNUMyMTcuNzM2IDg0LjMyMTEgMjIwLjUwOCA4MC4xOTIzIDIyMi40MjIgNzUuNjUxOUMyMjQuMzkyIDcwLjkyOSAyMjUuNDA2IDY1Ljg2MzEgMjI1LjQwNiA2MC43NDY1QzIyNS40MDYgNTUuNjI5OSAyMjQuMzkyIDUwLjU2NCAyMjIuNDIyIDQ1Ljg0MTFIMjIyLjQyOVpNMjA5LjYzMiA3MC4wODMyQzIwNy4xODIgNzUuOTIxOCAyMDIuNTUxIDgwLjU3NzQgMTk2LjcyMyA4My4wNjI4QzE5My42ODggODQuMzI3MSAxOTAuNDMyIDg0Ljk3OCAxODcuMTQzIDg0Ljk3OEMxODMuODU1IDg0Ljk3OCAxODAuNTk5IDg0LjMyNzEgMTc3LjU2MyA4My4wNjI4QzE3NC42NjggODEuODMxOSAxNzIuMDM4IDgwLjA1MzQgMTY5LjgxOCA3Ny44MjUxQzE2Ny42MDkgNzUuNTkzMyAxNjUuODM4IDcyLjk2OCAxNjQuNTk3IDcwLjA4NTFDMTYzLjMyNyA2Ny4xNTcxIDE2Mi42NzEgNjQuMDAwMSAxNjIuNjcgNjAuODA5MUMxNzAuNzIyIDYyLjMxNyAxNzguODk3IDYzLjA3NDIgMTg3LjA4OSA2My4wNzA4QzE5NS4yODEgNjMuMDczNiAyMDMuNDU1IDYyLjMxNTggMjExLjUwNyA2MC44MDcyQzIxMS41MTEgNjMuOTkzNSAyMTAuODczIDY3LjE0OCAyMDkuNjMyIDcwLjA4MzJaIiBmaWxsPSIjRkYzMTYyIj48L3BhdGg+CjwvZz4KPHBhdGggZD0iTTkzLjYxNzkgODkuMDI4MUM5Ny4xNDMzIDkyLjQ3NzYgMTAxLjMwNCA5NS4yMTE1IDEwNS44NjkgOTcuMDc4NkMxMTAuNTUyIDk5LjAyNjggMTE1LjU3NiAxMDAgMTIwLjk0MyA5OS45OTlDMTI1LjgzNyA5OS45OTkgMTMwLjM3NSA5OS4yMTAyIDEzNC41NiA5Ny42MzI1QzEzOC43NTIgOTYuMDUwMyAxNDIuNTggOTMuNjMzNyAxNDUuODEyIDkwLjUyOUMxNDYuNjA5IDg5LjcyNyAxNDcuMjQgODguNzc0NSAxNDcuNjY3IDg3LjcyNjdDMTQ4LjEgODYuNzE2IDE0OC4zMjkgODUuNjI5MSAxNDguMzM5IDg0LjUyOTRDMTQ4LjM0OSA4My42MzUxIDE0OC4xNzQgODIuNzQ4NCAxNDcuODI2IDgxLjkyNDZDMTQ3LjQ5NCA4MS4xNTI3IDE0Ny4wMSA4MC40NTUzIDE0Ni40MDQgNzkuODczN0MxNDUuODEgNzkuMzAyNiAxNDUuMTE0IDc4Ljg0NzQgMTQ0LjM1MyA3OC41MzE3QzE0My42MTcgNzguMjIyIDE0Mi44MjggNzguMDYwNyAxNDIuMDI5IDc4LjA1NzJDMTQwLjE4NyA3OC4wNTcyIDEzOC40MjUgNzguODQ2NyAxMzYuNzQyIDgwLjQyNTdDMTM0LjY1OCA4Mi40MDI2IDEzMi4xNjUgODMuODk3OSAxMjkuNDM5IDg0LjgwNjNDMTI2LjY5OCA4NS42ODcxIDEyMy44MzQgODYuMTI2NCAxMjAuOTU1IDg2LjEwNzdDMTE3LjY2OCA4Ni4xMzM2IDExNC40MDggODUuNTAzNSAxMTEuMzY3IDg0LjI1NDRDMTA1LjU1MiA4MS44OTQ5IDEwMC45MSA3Ny4zMjQ1IDk4LjQ2MTMgNzEuNTQ2M0M5Ny4xODY1IDY4LjU2NjcgOTYuNTQxNyA2NS4zNTU3IDk2LjU2NzMgNjIuMTE1VjM2LjM4NTJIMTI3LjkwMkMxMjkuOSAzNi4zODUyIDEzMS41NzEgMzUuNzM5NiAxMzIuOTE0IDM0LjQ0ODZDMTMzLjU2NCAzMy44MzcyIDEzNC4wNzkgMzMuMDk1NiAxMzQuNDIzIDMyLjI3MkMxMzQuNzY4IDMxLjQ0ODUgMTM0LjkzNSAzMC41NjE1IDEzNC45MTQgMjkuNjY5QzEzNC45MjcgMjguNzM4MiAxMzQuNzUzIDI3LjgxNDQgMTM0LjQgMjYuOTUyOEMxMzQuMDQ4IDI2LjA5MTMgMTMzLjUyNSAyNS4zMDk3IDEzMi44NjMgMjQuNjU1MUMxMzIuMjI0IDIzLjk4MiAxMzEuNDUyIDIzLjQ0ODkgMTMwLjU5NiAyMy4wODkyQzEyOS43NCAyMi43Mjk2IDEyOC44MTggMjIuNTUxMiAxMjcuODkgMjIuNTY1NUg5Ni41NTU3VjcuMTAzNTlDOTYuNTY1NyA2LjEzODU5IDk2LjM2NzYgNS4xODI3NyA5NS45NzQ3IDQuMzAxMzFDOTUuNTk4OCAzLjQ1ODc1IDk1LjA2NjUgMi42OTUxNCA5NC40MDYxIDIuMDUwOTZDOTMuNzMyOCAxLjQwOTMyIDkyLjk0NDMgMC45MDA3NDIgOTIuMDgyMSAwLjU1MjAyNUM5MS4yMTIzIDAuMTg4MTUyIDkwLjI3ODkgMC4wMDA1NTA5MzQgODkuMzM2IDkuMTc5MjhlLTA1Qzg4LjQxNyAtMC4wMDQ3NjYzIDg3LjUwNzIgMC4xODMyNjEgODYuNjY1NCAwLjU1MjAyNUM4NS44MjcgMC45MTk0MjggODUuMDY1NSAxLjQ0MTc4IDg0LjQyMDkgMi4wOTE2M0M4My43NjcyIDIuNzQ4MTggODMuMjQ3NiAzLjUyNTY2IDgyLjg5MSA0LjM4MDcxQzgyLjUyNiA1LjI0MTk4IDgyLjMzODkgNi4xNjgxNyA4Mi4zNDEgNy4xMDM1OVY2MS45NTYyQzgyLjM0MSA2Ny4zMjQ1IDgzLjM0OCA3Mi4zMjM1IDg1LjM2MjEgNzYuOTUzM0M4Ny4zMDUzIDgxLjQ3NTMgOTAuMTA5MyA4NS41NzYzIDkzLjYxNzkgODkuMDI4MVoiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPHBhdGggZD0iTTY1LjgyOTMgMzQuMjE0M0M2Mi4zMjE4IDMwLjY5MTUgNTguMTY4MiAyNy44Nzc5IDUzLjU5NTcgMjUuOTI3NUM0OC45MTA0IDIzLjkwMzEgNDMuODg2MiAyMi44OTA5IDM4LjUyMzEgMjIuODkwOUMzMy4zODA4IDIyLjg1NTcgMjguMjg3NCAyMy44OTA0IDIzLjU2NjYgMjUuOTI5NEMxNC4zMzIgMjkuODgzNiA2Ljk3ODc4IDM3LjI0NzkgMy4wMzg1IDQ2LjQ4ODVDMS4wMzMyMSA1MS4yMzM4IDAgNTYuMzMzMSAwIDYxLjQ4NDdDMCA2Ni42MzYzIDEuMDMzMjEgNzEuNzM1NSAzLjAzODUgNzYuNDgwOEM0Ljk4ODQyIDgxLjA1MzYgNy44MDIwNyA4NS4yMDczIDExLjMyNTMgODguNzE0NEMxNC44NTA4IDkyLjIwNTQgMTkuMDAwNiA5NS4wMDMzIDIzLjU1ODkgOTYuOTYyNEMyOC4yODIyIDk5LjAwMTggMzMuMzc4MyAxMDAuMDM2IDM4LjUyMzEgOTkuOTk5QzQzLjg5MTMgOTkuOTk5IDQ4LjkxNjggOTguOTg2MiA1My41OTk2IDk2Ljk2MDVDNTguMTYzOCA5NS4wMTQzIDYyLjMxNDYgOTIuMjE0OSA2NS44MjkzIDg4LjcxMjVDNjkuMzI3NiA4NS4yMDEzIDcyLjExNDQgODEuMDQ3NCA3NC4wMzY3IDc2LjQ3ODlDNzYuMDE2OSA3MS43MjczIDc3LjAzNjQgNjYuNjMwNSA3Ny4wMzY0IDYxLjQ4MjdDNzcuMDM2NCA1Ni4zMzUgNzYuMDE2OSA1MS4yMzgyIDc0LjAzNjcgNDYuNDg2NkM3Mi4xMDczIDQxLjkxMDUgNjkuMzIxNiAzNy43NDUxIDY1LjgyOTMgMzQuMjE0M1oiIGZpbGw9IiNGRjMxNjIiPjwvcGF0aD4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDU5XzYwIj4KPHJlY3Qgd2lkdGg9Ijc2LjY0MzQiIGhlaWdodD0iNzYuNjQzNCIgZmlsbD0id2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OC43NjMgMjIuMzg3MykiPjwvcmVjdD4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4=" class="footer-logo" alt="Oto CRM">
+      <span class="footer-tag">powered by Oto CRM</span>
+    </div>
+  </div>
+
+</div>
+<!-- ══ fim E-MAIL ══ -->
+
+</div>
+</div>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.variant').forEach(function(el){el.classList.remove('show')});
+  document.querySelectorAll('.toggle-btn').forEach(function(el){el.classList.remove('active')});
+  document.getElementById('tab-'+tab).classList.add('show');
+  btn.classList.add('active');
+}
+
+function parseN(el){ return parseInt((el?el.textContent:'0').replace(/\D/g,''))||0; }
+function pct(a,b){ return b>0?(a/b*100).toFixed(2)+'%':'—'; }
+function barW(a,b){ return b>0?Math.min(100,Math.round(a/b*100))+'%':'0%'; }
+function fmtN(n){ return n>0?n.toLocaleString('pt-BR'):'—'; }
+
+function parseVal(el) {
+  if (!el) return 0;
+  var s = el.textContent.replace(/[R$\s.]/g, '').replace(',', '.');
+  return parseFloat(s) || 0;
+}
+
+function fmtBRL(v) {
+  return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function fmtX(v) {
+  return v.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'x';
+}
+
+function calcROI(receita, investimento) {
+  if (investimento <= 0) return '—';
+  return fmtX((receita - investimento) / investimento);
+}
+
+function calcTKM(receita, vendas) {
+  if (vendas <= 0) return '—';
+  return fmtBRL(receita / vendas);
+}
+
+// ── SMS calcs ──
+function updateSMSCalcs() {
+  var receita = parseVal(document.getElementById('sms-receita'));
+  var invest  = parseVal(document.getElementById('sms-investimento'));
+  var vendas  = parseN(document.getElementById('sms-vendas'));
+
+  document.getElementById('sms-roi-val').textContent = calcROI(receita, invest);
+  document.getElementById('sms-tkm-val').textContent = calcTKM(receita, vendas);
+  updateSMSFunil();
+}
+
+// ── Email calcs ──
+function updateEmailCalcs() {
+  var receita = parseVal(document.getElementById('em-receita'));
+  var invest  = parseVal(document.getElementById('em-investimento'));
+  var vendas  = parseN(document.getElementById('em-vendas'));
+
+  document.getElementById('em-roi-val').textContent = calcROI(receita, invest);
+  document.getElementById('em-tkm-val').textContent = calcTKM(receita, vendas);
+  updateEmailFunil();
+}
+
+// ── SMS funil ──
+function updateSMSFunil(){
+  var env = parseN(document.getElementById('sms-enviados'));
+  var con = parseN(document.getElementById('sms-confirmados'));
+  var rec = parseN(document.getElementById('sms-recebidos'));
+  var vnd = parseN(document.getElementById('sms-vendas'));
+
+  document.getElementById('sms-tx-entrega').textContent = 'Taxa de entrega: '+pct(con,env);
+  document.getElementById('sms-tx-conv').textContent = pct(vnd,env);
+  document.getElementById('sms-funil-conv').textContent = pct(vnd,env);
+
+  document.getElementById('sfv-enviados').textContent = fmtN(env);
+  document.getElementById('sfv-confirmados').textContent = fmtN(con);
+  document.getElementById('sfp-confirmados').textContent = pct(con,env);
+  document.getElementById('sf-confirmados').style.width = barW(con,env);
+  document.getElementById('sfv-recebidos').textContent = fmtN(rec);
+  document.getElementById('sfp-recebidos').textContent = pct(rec,env);
+  document.getElementById('sf-recebidos').style.width = barW(rec,env);
+  document.getElementById('sfv-convertidos').textContent = fmtN(vnd);
+  document.getElementById('sfp-convertidos').textContent = pct(vnd,env);
+  document.getElementById('sf-convertidos').style.width = barW(vnd,env);
+}
+
+// ── SMS timing ──
+var smsTiming = {_03:0,_47:0,_815:0};
+function updateSMSTiming(f,v){
+  smsTiming['_'+f] = parseInt(v);
+  document.getElementById('sctl-'+f).textContent = v;
+  document.getElementById('stv-'+f).textContent = v;
+  var mx = Math.max(smsTiming._03,smsTiming._47,smsTiming._815,1);
+  ['03','47','815'].forEach(function(k){
+    document.getElementById('stb-'+k).style.width = Math.round(smsTiming['_'+k]/mx*100)+'%';
+  });
+}
+
+// ── EMAIL funil ──
+function updateEmailFunil(){
+  var env = parseN(document.getElementById('em-enviados'));
+  var ent = parseN(document.getElementById('em-entregues'));
+  var abr = parseN(document.getElementById('em-aberturas'));
+  var clk = parseN(document.getElementById('em-cliques'));
+  var vnd = parseN(document.getElementById('em-vendas'));
+
+  document.getElementById('em-tx-entrega').textContent = 'Taxa de entrega: '+pct(ent,env);
+  document.getElementById('em-tx-abertura').textContent = 'Taxa de abertura: '+pct(abr,ent);
+  document.getElementById('em-tx-clique').textContent = 'Taxa de clique: '+pct(clk,ent);
+  document.getElementById('em-tx-conv').textContent = pct(vnd,env);
+  document.getElementById('em-funil-conv').textContent = pct(vnd,env);
+
+  document.getElementById('efv-enviados').textContent = fmtN(env);
+  document.getElementById('efv-entregues').textContent = fmtN(ent);
+  document.getElementById('efp-entregues').textContent = pct(ent,env);
+  document.getElementById('ef-entregues').style.width = barW(ent,env);
+  document.getElementById('efv-aberturas').textContent = fmtN(abr);
+  document.getElementById('efp-aberturas').textContent = pct(abr,env);
+  document.getElementById('ef-aberturas').style.width = barW(abr,env);
+  document.getElementById('efv-cliques').textContent = fmtN(clk);
+  document.getElementById('efp-cliques').textContent = pct(clk,env);
+  document.getElementById('ef-cliques').style.width = barW(clk,env);
+  document.getElementById('efv-convertidos').textContent = fmtN(vnd);
+  document.getElementById('efp-convertidos').textContent = pct(vnd,env);
+  document.getElementById('ef-convertidos').style.width = barW(vnd,env);
+}
+
+// ── EMAIL timing ──
+var emailTiming = {_03:0,_47:0,_815:0};
+function updateEmailTiming(f,v){
+  emailTiming['_'+f] = parseInt(v);
+  document.getElementById('ectl-'+f).textContent = v;
+  document.getElementById('etv-'+f).textContent = v;
+  var mx = Math.max(emailTiming._03,emailTiming._47,emailTiming._815,1);
+  ['03','47','815'].forEach(function(k){
+    document.getElementById('etb-'+k).style.width = Math.round(emailTiming['_'+k]/mx*100)+'%';
+  });
+}
+
+// ── RESET ──
+function resetAll(){
+  if(!confirm('Limpar todos os dados?')) return;
+  document.querySelectorAll('[contenteditable]').forEach(function(el){
+    var original = el.dataset.original !== undefined ? el.dataset.original : el.dataset.default;
+    if(original !== undefined) el.innerHTML = original;
+  });
+  document.querySelectorAll('input[type=range]').forEach(function(r){r.value=0});
+  smsTiming={_03:0,_47:0,_815:0};
+  emailTiming={_03:0,_47:0,_815:0};
+  ['03','47','815'].forEach(function(f){
+    ['stb','sctl','stv','etb','ectl','etv'].forEach(function(p){
+      var el=document.getElementById(p+'-'+f);
+      if(el){el.style.width='0%';el.textContent='0';}
+    });
+  });
+  updateSMSFunil();
+  updateEmailFunil();
+}
+
+// init — snapshot de todos os contenteditable
+document.querySelectorAll('[contenteditable]').forEach(function(el){
+  el.dataset.original = el.innerHTML;
+});
+
+updateSMSFunil();
+updateEmailFunil();
+updateSMSCalcs();
+updateEmailCalcs();
+</script>
+</body>
+</html>
